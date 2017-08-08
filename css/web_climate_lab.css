@@ -1,0 +1,386 @@
+ #getActiveMQ-watcher {
+    font-family: "mq-singlewide";
+}
+
+body {
+    line-height: 130%;
+    font-family: "Helvetica";
+    font-size: .8em;
+    color: #3A3A3A;
+    margin: 8px;
+    box-sizing: border-box;
+    -webkit-text-size-adjust: 100%;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+h2 {
+    font-family: "urbanobold_condensed";
+    font-size: 1.8em;
+    line-height: 100%;
+    color: #000000;
+    font-weight: normal;
+}
+
+h3 {
+    font-family: "urbanobold_condensed";
+    font-size: 1.5em;
+    line-height: 100%;
+    color: #000000;
+    font-weight: normal;
+}
+
+h4 {
+    margin: 0px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #000000;
+}
+
+canvas {
+    display: block;
+}
+
+b {
+    color: black;
+    font-size: 1.05em;
+}
+
+.panel {
+    margin-bottom: .8em;
+}
+
+.panel_box {
+    border: 2px solid black;
+    border-radius: 0px;
+}
+
+/* Gives a div margins like a paragraph, since paragraphs can't contain some
+   elements */
+.paradiv {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+img.help {
+    width: 1em;
+    height: 1em;
+}
+
+h3 img.help {
+    width: .8em;
+    height: .8em;
+}
+
+.help_box {
+    position: absolute;
+    width: 300px;
+    max-width: 100%;
+    max-height: 200px;
+    overflow: auto;
+    border: 2px solid #3F93E1;
+    padding: 5px;
+    background-color: #ABD6FF;
+    z-index: 1;
+}
+
+.help_box::-webkit-scrollbar {
+    width: 10px;
+}
+
+.help_box::-webkit-scrollbar-track-piece {
+    background-color: #ABD6FF;
+}
+
+.help_box::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background-clip: content-box;
+}
+
+#all {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: auto;
+    /* Noscript default */
+    opacity: 0;
+}
+
+#intro {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    top: 0px;
+    z-index: 2;
+    border: 2px solid #002DB3;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: white;
+    box-shadow: 0 0 .75em .75em white;
+    padding: 10px;
+    border-top-width: 0px;
+}
+
+.intro_title {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+#intro_nav {
+    text-align: center;
+    width: 90%;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.intro_button {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+#intro_spacer {
+    margin-top: -8px;
+}
+
+#policy {
+    padding: 10px;
+    overflow: hidden;
+    opacity: .05;
+}
+
+.panel_title {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.radiogrid {
+    display: block;
+    float: left;
+    clear: left;
+    margin-right: .5em;
+}
+
+.radiogridcap {
+    overflow: hidden;
+    margin-bottom: .5em;
+}
+
+#cptop_anchor {
+    position: relative;
+}
+
+#cp {
+    padding: 10px;
+    border-color: rgba(0, 0, 0, .05);
+}
+
+#cp_title {
+    opacity: .05;
+}
+
+#param_pick {
+    opacity: .05;
+}
+
+#tuning_buttons {
+    text-align: center;
+}
+
+.slider_cont {
+    position: relative;
+    width: 160px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cp_slider {
+    position: absolute;
+    height: 15px;
+    opacity: 0;
+}
+
+#clim_sens_param {
+    bottom: 31px;
+    left: 25px;
+    width: 116px;
+}
+
+#diff_param {
+    bottom: 35px;
+    left: 15px;
+    width: 129px;
+}
+
+.slider_val {
+    display: block;
+    width: 180px;
+    text-align: center;
+    position: relative;
+    top: -5px;
+}
+
+.sqrt {
+    text-decoration: overline;
+}
+
+#cp_run {
+    font-family: "urbanobold_condensed";
+    font-size: 1.5em;
+    line-height: 100%;
+    color: #000000;
+    font-weight: normal;
+    background-color: white;
+    padding-top: 4px;
+    border: 2px solid black;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: .05;
+}
+
+#cp_output {
+    font-family: "urbanobold_condensed";
+    font-size: 1.5em;
+    line-height: 100%;
+    color: #000000;
+    font-weight: normal;
+    background-color: white;
+    padding-top: 3.5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 1.5px;
+    border: 2px solid black;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-decoration: none;
+    opacity: .05;
+    pointer-events: none;
+    cursor: default;
+}
+
+#results_cont {
+    position: relative;
+    overflow: hidden;
+}
+
+#results_display {
+    opacity: .05;
+}
+
+#cmip_help {
+    position: absolute;
+    display: none;
+}
+
+#copyright {
+    clear: both;
+    color: #AAAAAA;
+}
+
+@media screen and (min-width:450px) {
+    .boxed_slider {
+        float: left;
+        width: calc(50% - 5px);
+    }
+    
+    #sqrtkv_cont {
+        margin-left: 10px;
+    }
+}
+
+@media screen and (min-width:720px) {
+    #getActiveMQ-watcher {
+        font-family: "mq-sidetune";
+    }
+    
+    .boxed_slider {
+        width: auto;
+    }
+    
+    #sqrtkv_cont {
+        margin-left: 0px;
+    }
+
+    #cp {
+        max-width: 244px;
+        float: left;
+        margin-right: 1.5em;
+    }
+
+    #results_display {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+@media screen and (min-width:970px) {
+    #getActiveMQ-watcher {
+        font-family: "mq-floatintro";
+    }
+
+    .help_box {
+        z-index: 3;
+    }
+
+    #intro {
+        position: absolute;
+        border: 2px solid #002DB3;
+        border-radius: 10px;
+        box-shadow: .2em .2em .2em 0 rgba(0, 0, 0, .2);
+        margin: 0px;
+        left: auto;
+        right: auto;
+        top: auto;
+    }
+
+    #intro_spacer {
+        display: none;
+    }
+
+    /* Dynamic positioning classes for floating intro */
+    #intro.fi_start {
+        left: 50%;
+        top: 150px;
+        width: 500px;
+        margin-left: -250px;
+    }
+
+    #intro.fi_controls {
+        left: 263px;
+        top: 0px;
+        width: 300px;
+    }
+
+    #intro.fi_run {
+        left: 263px;
+        top: 350px;
+        width: 300px;
+    }
+
+    #intro.fi_overproj{
+        left: 345px;
+        top: 30px;
+        width: 240px;
+    }
+}
+
+@media screen and (min-width:1200px) {
+    #getActiveMQ-watcher {
+        font-family: "mq-maxed";
+    }
+    
+    #all {
+        max-width: 1184px;
+    }
+}

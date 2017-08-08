@@ -1,0 +1,11 @@
+{
+    "elements": {},
+    "attributes": {
+        "crossorigin": {
+            "context": "script"
+        },
+        "integrity": {
+            "context": "script"
+        }
+    }
+}
