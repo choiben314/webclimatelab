@@ -1,5 +1,5 @@
 /* global webClimateLab */
-
+var rcpTemp = "8.5_temp";
 /**
  * Creates an object representing a graph that can be outlined and plotted.
  * @class
@@ -32,6 +32,7 @@ function Graph(ctx, originX, originY, width, height, buffer, minXVal, maxXVal, m
     this.edgeY = this.originY;
     this.title = undefined;
     this.hasPast = false;
+    this.hasSAModel = false;
     this.has2100 = false;
 
     /**
@@ -40,9 +41,22 @@ function Graph(ctx, originX, originY, width, height, buffer, minXVal, maxXVal, m
      */
     this.addPastTemps = function (pastTemps) {
         this.hasPast = true;
+
         this.pastMin = Math.max(Math.min.apply(null, Object.keys(pastTemps)), this.minXVal);
         this.pastMax = Math.min(Math.max.apply(null, Object.keys(pastTemps)), this.maxXVal);
         this.pastTemps = pastTemps;
+    };
+
+    /**
+     * Adds a state of the art model data series. Use this instead of setting saModelTemps directly.
+     * @param {Number[]} saModelTemps Format [unlim][3], where [][0] is estimate, [][1] is lower, and [][2] is upper. Indexed by year.
+     */
+    this.addSAModelTemps = function (saModelTemps) {
+        this.hasSAModel = true;
+
+        this.saModelMin = Math.max(Math.min.apply(null, Object.keys(saModelTemps[rcpTemp])), this.minXVal);
+        this.saModelMax = Math.min(Math.max.apply(null, Object.keys(saModelTemps[rcpTemp])), this.maxXVal);
+        this.saModelTemps = saModelTemps;
     };
 
     /**
@@ -215,56 +229,6 @@ function Graph(ctx, originX, originY, width, height, buffer, minXVal, maxXVal, m
         this.ctx.lineJoin = "miter";
     };
 
-//    (function () {
-//        var lastTime = 0;
-//        var vendors = ['ms', 'moz', 'webkit', 'o'];
-//        for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-//            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-//            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
-//        }
-//
-//        if (!window.requestAnimationFrame)
-//            window.requestAnimationFrame = function (callback, element) {
-//                var currTime = new Date().getTime();
-//                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-//                var id = window.setTimeout(function () {
-//                    callback(currTime + timeToCall);
-//                },
-//                        timeToCall);
-//                lastTime = currTime + timeToCall;
-//                return id;
-//            };
-//
-//        if (!window.cancelAnimationFrame)
-//            window.cancelAnimationFrame = function (id) {
-//                clearTimeout(id);
-//            };
-//    }());
-    
-//    function animate(series) {
-//         var t = 1860;
-//        if (t < 2100) {
-//            requestAnimationFrame(animate);
-//        }
-//        
-//        /*this.ctx.beginPath();
-//        this.ctx.moveTo(this.mapXVal(startXVal), this.mapYVal(series[startXVal]));
-//        var plotXVal = startXVal;
-//        while (series[plotXVal] !== undefined) {
-//            this.ctx.lineTo(this.mapXVal(plotXVal), this.mapYVal(series[plotXVal]));
-//            plotXVal = Math.round((plotXVal + incXVal) * 1000000000) / 1000000000;
-//            //console.log('X Value: ' + plotXVal + ' | Temperature Output: ' + series[plotXVal]);
-//        }
-//        this.ctx.stroke();
-//        this.ctx.lineJoin = "miter";*/
-//        
-//        this.ctx.beginPath();
-//        this.ctx.moveTo(t, series[t]);
-//        this.ctx.lineTo(t + 1, series[t + 1]);
-//        this.ctx.stroke();
-//        t++;
-//    }
-
     this.recalcSize = function () {
         this.maxX = this.originX + this.width - this.buffer;
         this.maxY = this.originY - this.height + this.buffer;
@@ -324,6 +288,9 @@ Graph.drawArrow = function (ctx, pointX, pointY, length, dir) {
  * will be shown as h4
  */
 function showTempGraph(modelTempSeries, g, h3) {
+    if (typeof webClimateLab.rcp !== "undefined") {
+        rcpTemp = webClimateLab.rcp + "_temp";
+    }
     if (h3 === undefined)
         h3 = false;
     var possibleExtremeTemps = [];
@@ -344,17 +311,27 @@ function showTempGraph(modelTempSeries, g, h3) {
             possibleExtremeTemps.push(g.pastTemps[i][2]);
         }
     }
+    if (g.hasSAModel) {
+        for (var i = g.saModelMin; i <= g.saModelMax; i++) {
+            possibleExtremeTemps.push(g.saModelTemps[rcpTemp][i][0]);
+            possibleExtremeTemps.push(g.saModelTemps[rcpTemp][i][2]);
+        }
+    }
     g.minYVal = Math.floor(Math.min.apply(null, possibleExtremeTemps) * 2) / 2;
     g.maxYVal = Math.ceil(Math.max.apply(null, possibleExtremeTemps) * 2) / 2;
 
     if (g.has2100) {
         if (webClimateLab.rcp !== undefined) {
             showParisGoal(modelTempSeries, g);
-            showAr5Proj(modelTempSeries, g);
+            //showAr5Proj(modelTempSeries, g); // Uncomment this to display Ar5 Projection (Green vertical bar).
         }
     }
     if (g.hasPast) {
         plotHistorical(g);
+    }
+
+    if (g.hasSAModel) {
+        plotSAModel(g);
     }
 
     if (modelTempSeries.length !== 0) {
@@ -405,25 +382,68 @@ function plotHistorical(g) {
         lowerSeries[i] = data[i][1];
         upperSeries[i] = data[i][2];
     }
+    
+// UNCOMMENT THE BELOW TO ADD HISTORICAL UNCERTAINTY
 
-    g.ctx.fillStyle = "#4D94FF";
-    var plotYear = g.pastMax;
-    g.ctx.beginPath();
-    g.ctx.moveTo(g.mapXVal(g.pastMax), g.mapYVal(upperSeries[g.pastMax]));
-    while (plotYear > g.pastMin) {
-        plotYear--;
-        g.ctx.lineTo(g.mapXVal(plotYear), g.mapYVal(upperSeries[plotYear]));
-    }
-    g.ctx.lineTo(g.mapXVal(g.pastMin), g.mapYVal(lowerSeries[g.pastMin]));
-    while (plotYear < g.pastMax) {
-        plotYear++;
-        g.ctx.lineTo(g.mapXVal(plotYear), g.mapYVal(lowerSeries[plotYear]));
-    }
-    g.ctx.fill();
+//    g.ctx.fillStyle = "#4D94FF";
+//    var plotYear = g.pastMax;
+//    g.ctx.beginPath();
+//    g.ctx.moveTo(g.mapXVal(g.pastMax), g.mapYVal(upperSeries[g.pastMax]));
+//    while (plotYear > g.pastMin) {
+//        plotYear--;
+//        g.ctx.lineTo(g.mapXVal(plotYear), g.mapYVal(upperSeries[plotYear]));
+//    }
+//    g.ctx.lineTo(g.mapXVal(g.pastMin), g.mapYVal(lowerSeries[g.pastMin]));
+//    while (plotYear < g.pastMax) {
+//        plotYear++;
+//        g.ctx.lineTo(g.mapXVal(plotYear), g.mapYVal(lowerSeries[plotYear]));
+//    }
+//    g.ctx.fill();
 
     //g.plot(lowerSeries, "#0066FF", 1);
     //g.plot(upperSeries, "#0066FF", 1);
     g.plot(meanSeries, "#000000", 1);
+}
+
+/**
+ * @param {Graph} g
+ */
+function plotSAModel(g) {
+    var data = g.saModelTemps;
+    var meanSeries = [];
+    var lowerSeries = [];
+    var upperSeries = [];
+    for (var i in data[rcpTemp]) {
+        meanSeries[i] = data[rcpTemp][i][1];
+        lowerSeries[i] = data[rcpTemp][i][0];
+        upperSeries[i] = data[rcpTemp][i][2];
+    }
+    
+    // sets opacity of model range to 0.5
+    g.ctx.globalAlpha = 0.5;
+    g.ctx.fillStyle = "#99C199";
+    
+    var plotYear = g.saModelMax;
+    g.ctx.beginPath();
+    g.ctx.moveTo(g.mapXVal(g.saModelMax), g.mapYVal(upperSeries[g.saModelMax]));
+    while (plotYear > g.saModelMin) {
+        plotYear--;
+        g.ctx.lineTo(g.mapXVal(plotYear), g.mapYVal(upperSeries[plotYear]));
+    }
+    g.ctx.lineTo(g.mapXVal(g.saModelMin), g.mapYVal(lowerSeries[g.saModelMin]));
+    while (plotYear < g.saModelMax) {
+        plotYear++;
+        g.ctx.lineTo(g.mapXVal(plotYear), g.mapYVal(lowerSeries[plotYear]));
+    }
+    g.ctx.fill();
+    g.ctx.globalAlpha = 1.0;
+
+    //g.plot(lowerSeries, "#0066FF", 1);
+    //g.plot(upperSeries, "#0066FF", 1);
+    
+    // UNCOMMENT THE BELOW TO ADD STATE OF THE ART MODEL MEAN ESTIMATE
+
+    //g.plot(meanSeries, "#498D34", 1);
 }
 
 function plotModel(data, g) {

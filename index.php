@@ -76,7 +76,7 @@
                             <h4>How quickly does the ocean absorb heat from the atmosphere?</h4>
                             <div class="slider_cont">
                                 <canvas id="sqrtkv_disp" width="160" height="130"></canvas>
-                                <input type="range" id="diff_param" class="cp_slider" min="0.2" max="8.4" value="2.2" step="0.2" disabled/>
+                                <input type="range" id="diff_param" class="cp_slider" min="1.0" max="8.0" value="2.2" step="0.2" disabled/>
                                 <span id="diff_param_disp" class="slider_val"></span>
                             </div>
                         </div>

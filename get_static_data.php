@@ -19,6 +19,16 @@ foreach ($stmt as $row) {
 }
 $output["rcp"] = $rcp;
 
+$stmt = $pdo->query("SELECT * FROM rcp_temp");
+$model_temps = ["2.6_temp" => [], "4.5_temp" => [], "6.0_temp" => [], "8.5_temp" => []];
+foreach ($stmt as $row) {
+    $model_temps["2.6_temp"][$row["year"]] = array_values(array_slice($row, 1, 3));
+    $model_temps["4.5_temp"][$row["year"]] = array_values(array_slice($row, 4, 3));
+    $model_temps["6.0_temp"][$row["year"]] = array_values(array_slice($row, 7, 3));
+    $model_temps["8.5_temp"][$row["year"]] = array_values(array_slice($row, 10, 3));
+}
+$output["model_temps"] = $model_temps;
+
 $stmt = $pdo->query("SELECT * FROM past_global_temps");
 $output["gtemps"] = [];
 foreach ($stmt as $row) {
