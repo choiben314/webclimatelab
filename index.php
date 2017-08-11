@@ -138,8 +138,7 @@
             <div id="intro_step5" data-p="#cptop_anchor" data-css="fi_overproj">
                 <h3 class="intro_title">Comparison with past observations</h3>
                 <p>To evaluate their models, scientists use reconstructions of past
-                    climate, show here in blue. If the red line is almost always in the
-                    blue range, your simple model matches past observations
+                    climate, show here as a black line. If the red line is almost always near the black line, your simple model matches past observations
                     well, so it's also likely to project future temperatures well.
                     If it doesn't, your choice of parameters might have led to
                     an inaccurate model! Change the parameters to improve your projection.</p>
@@ -180,7 +179,7 @@
                 projections.
             </div>
             <div id="helpdata_cmip">
-                The green bar shows the 5th to 95th percentile range of Coupled
+                The green area shows the 5th to 95th percentile range of Coupled
                 Model Intercomparison Project phase 5 (CMIP5) results for the
                 selected scenario. CMIP5 includes 42 models from research groups
                 around the world, all of which are atmosphere-ocean general

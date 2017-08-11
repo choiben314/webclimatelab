@@ -62,6 +62,7 @@ View.ViewGraph = function(g, x, y, currX, currY, h3) {
     this.h3 = h3;
     this.offX = x;
     this.offY = y;
+    
     g.originX = currX + this.offX;
     g.originY = currY + this.offY;
     g.recalcSize();

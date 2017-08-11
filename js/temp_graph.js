@@ -42,8 +42,8 @@ function Graph(ctx, originX, originY, width, height, buffer, minXVal, maxXVal, m
     this.addPastTemps = function (pastTemps) {
         this.hasPast = true;
 
-        this.pastMin = Math.max(Math.min.apply(null, Object.keys(pastTemps)), this.minXVal);
-        this.pastMax = Math.min(Math.max.apply(null, Object.keys(pastTemps)), this.maxXVal);
+        //this.pastMin = Math.max(Math.min.apply(null, Object.keys(pastTemps)), this.minXVal);
+        //this.pastMax = Math.min(Math.max.apply(null, Object.keys(pastTemps)), this.maxXVal);
         this.pastTemps = pastTemps;
     };
 
@@ -305,12 +305,12 @@ function showTempGraph(modelTempSeries, g, h3) {
         }
         possibleExtremeTemps.push(0);
     }
-    if (g.hasPast) {
-        for (var i = g.pastMin; i <= g.pastMax; i++) {
-            possibleExtremeTemps.push(g.pastTemps[i][1]);
-            possibleExtremeTemps.push(g.pastTemps[i][2]);
-        }
-    }
+//    if (g.hasPast) {
+//        for (var i = g.pastMin; i <= g.pastMax; i++) {
+//            possibleExtremeTemps.push(g.pastTemps[i][1]);
+//            possibleExtremeTemps.push(g.pastTemps[i][2]);
+//        }
+//    }
     if (g.hasSAModel) {
         for (var i = g.saModelMin; i <= g.saModelMax; i++) {
             possibleExtremeTemps.push(g.saModelTemps[rcpTemp][i][0]);
@@ -342,7 +342,7 @@ function showTempGraph(modelTempSeries, g, h3) {
     if (g.yCaption === undefined) {
         g.yCaption = "";
     }
-    var xLabel = [1920, 1980, 2040]; //TODO Make this flexible for future changes
+    var xLabel = [1940, 1980, 2020, 2060]; //TODO Make this flexible for future changes
     var yLabel = [0];
     var xMark = [];
     for (var i = g.minXVal + 1; i < Math.floor(g.maxXVal / 20) * 20; i += 20) {
@@ -379,10 +379,9 @@ function plotHistorical(g) {
     var upperSeries = [];
     for (var i in data) {
         meanSeries[i] = data[i][0];
-        lowerSeries[i] = data[i][1];
-        upperSeries[i] = data[i][2];
+//        lowerSeries[i] = data[i][1];
+//        upperSeries[i] = data[i][2];
     }
-    
 // UNCOMMENT THE BELOW TO ADD HISTORICAL UNCERTAINTY
 
 //    g.ctx.fillStyle = "#4D94FF";
@@ -402,7 +401,7 @@ function plotHistorical(g) {
 
     //g.plot(lowerSeries, "#0066FF", 1);
     //g.plot(upperSeries, "#0066FF", 1);
-    g.plot(meanSeries, "#000000", 1);
+    g.plot(meanSeries, "#000000", 1, false, 1900, 1);
 }
 
 /**
@@ -418,11 +417,12 @@ function plotSAModel(g) {
         lowerSeries[i] = data[rcpTemp][i][0];
         upperSeries[i] = data[rcpTemp][i][2];
     }
-    
+    // lower is actually greater than upper
+
     // sets opacity of model range to 0.5
     g.ctx.globalAlpha = 0.5;
     g.ctx.fillStyle = "#99C199";
-    
+
     var plotYear = g.saModelMax;
     g.ctx.beginPath();
     g.ctx.moveTo(g.mapXVal(g.saModelMax), g.mapYVal(upperSeries[g.saModelMax]));
@@ -438,9 +438,14 @@ function plotSAModel(g) {
     g.ctx.fill();
     g.ctx.globalAlpha = 1.0;
 
+    if (typeof g.modelTemps !== "undefined") {
+        webClimateLab.inCmipRange = g.modelTemps[2100] <= lowerSeries[2100] && g.modelTemps[2100] >= upperSeries[2100];
+        setCmipCaption();
+    }
+
     //g.plot(lowerSeries, "#0066FF", 1);
     //g.plot(upperSeries, "#0066FF", 1);
-    
+
     // UNCOMMENT THE BELOW TO ADD STATE OF THE ART MODEL MEAN ESTIMATE
 
     //g.plot(meanSeries, "#498D34", 1);

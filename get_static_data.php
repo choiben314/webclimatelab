@@ -29,10 +29,10 @@ foreach ($stmt as $row) {
 }
 $output["model_temps"] = $model_temps;
 
-$stmt = $pdo->query("SELECT * FROM past_global_temps");
+$stmt = $pdo->query("SELECT * FROM HadCRUT4");
 $output["gtemps"] = [];
 foreach ($stmt as $row) {
-    $output["gtemps"][$row["year"]] = array_values(array_slice($row, 1));
+    $output["gtemps"][$row["Year"]] = array_values(array_slice($row, 1));
 }
 
 $stmt = $pdo->query("SELECT * FROM past_land_temps");

@@ -33,6 +33,7 @@ $(document).ready(function () {
     $("input[name=\"rcp\"]").change(function () {
         runFromCP(false);
     });
+
     addRangeDisps();
     addHelpListeners();
     setupGlobals();
@@ -57,7 +58,11 @@ function setupGlobals() {
     webClimateLab.piAdjust = 0.32; //Adjustment from pre-industrial average to 1961-1990 average
 
     var projCtx = $("#results_display")[0].getContext("2d");
-    webClimateLab.fGraph = new Graph(projCtx, null, null, 245, 250, 15, 1860, 2100, null, null);
+//    document.addEventListener("mousemove", function (e) {
+//        console.log(e.clientX + " " + e.clientY);
+//    });
+
+    webClimateLab.fGraph = new Graph(projCtx, null, null, 245, 250, 15, 1900, 2100, null, null);
     webClimateLab.fGraph.title = "Projected Global Mean Temperature";
     webClimateLab.fGraph.yCaption = "Global warming from pre-industrial avg (°C)";
     webClimateLab.fGraph.has2100 = true;
@@ -79,6 +84,11 @@ function setupGlobals() {
 //    webClimateLab.projView.key2.add("#498D34", "State of the Art Model Estimate");
     webClimateLab.projView.key2.add("#99C199", "State of the Art Model Range");
     webClimateLab.projView.key2.add("#80BFFF", "Paris Agreement Goal", 20);
+
+//    document.addEventListener("mousemove", function (e) {
+//        console.log(webClimateLab.projView.x);
+//        //console.log(webClimateLab.fGraph.originX + " " + webClimateLab.fGraph.originY + " " + webClimateLab.fGraph.width + " " + webClimateLab.fGraph.height);
+//    });
 }
 
 function getStaticData() {
@@ -100,8 +110,8 @@ function getStaticData() {
                 var gtemps = json["gtemps"];
                 for (var i in gtemps) {
                     gtemps[i][0] += webClimateLab.piAdjust;
-                    gtemps[i][1] += webClimateLab.piAdjust;
-                    gtemps[i][2] += webClimateLab.piAdjust;
+                    //gtemps[i][1] += webClimateLab.piAdjust;
+                    //gtemps[i][2] += webClimateLab.piAdjust;
                 }
                 webClimateLab.fGraph.addPastTemps(gtemps);
                 webClimateLab.fGraph.addSAModelTemps(webClimateLab.modelTemps);
