@@ -201,7 +201,7 @@ function runModel(lambda, kappa, rcp, mu, out) {
     console.log(new Date().getTime() - start + " ms");
 
     if (out) {
-        outputTempsToFile(tempsMeanPIAdjusted);
+        outputTempsToFile(tempsMeanPIAdjusted, 3.7 / lambda, Math.sqrt(kappa * 10000));
     }
 }
 
@@ -244,22 +244,20 @@ function runFromCP(out) {
     runModel(3.7 / csValue, Math.pow(kvValue, 2) / 10000, webClimateLab.rcp, getMu(csValue, kvValue, muData), out);
 }
 
-
-var txt = "";
 function outputTempsToFile(series, cs, kv) {
     xval = 1765; // change to 1765 if using rcp data, or 0 or some other start index if other rcp/forcing data
-//    var txt = "";
+    var txt = "";
     if (webClimateLab.runYet === true) {
-        txt += "\nCS: " + cs + " | KV: " + kv + "\n";
+        txt += "\nCS: " + cs.toFixed(1) + " | KV: " + kv.toFixed(1) + "\n";
         while (series[xval] !== undefined) {
             console.log('Year: ' + xval + ' | Temperature: ' + series[xval]);
             txt += xval + "," + series[xval] + "\n";
             xval++;
         }
     }
-//        uri = "data:application/octet-stream," + encodeURIComponent(txt);
-//        var date = new Date().toISOString().slice(0, 19).replace(/-/g, "");
-//        $("#cp_output").attr("href", uri).attr("download", "model_temp_data-" + date + ".txt");
+    uri = "data:application/octet-stream," + encodeURIComponent(txt);
+    var date = new Date().toISOString().slice(0, 19).replace(/-/g, "");
+    $("#cp_output").attr("href", uri).attr("download", "model_temp_data-" + date + ".txt");
 }
 
 

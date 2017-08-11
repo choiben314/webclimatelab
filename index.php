@@ -68,7 +68,7 @@
                             <h4>How strongly does the climate respond to greenhouse gases?</h4>
                             <div class="slider_cont">
                                 <canvas id="cs_disp" width="160" height="130"></canvas>
-                                <input type="range" id="clim_sens_param" class="cp_slider" min="1" max="8" value="3.6" step="0.2" disabled/>
+                                <input type="range" id="clim_sens_param" class="cp_slider" min="1.00" max="8.00" value="3.60" step="0.20" disabled/>
                                 <span id="clim_sens_param_disp" class="slider_val"></span>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                             <h4>How quickly does the ocean absorb heat from the atmosphere?</h4>
                             <div class="slider_cont">
                                 <canvas id="sqrtkv_disp" width="160" height="130"></canvas>
-                                <input type="range" id="diff_param" class="cp_slider" min="1.0" max="8.0" value="2.2" step="0.2" disabled/>
+                                <input type="range" id="diff_param" class="cp_slider" min="1.00" max="8.00" value="2.20" step="0.20" disabled/>
                                 <span id="diff_param_disp" class="slider_val"></span>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                 </div>
             </div>
             <div id="copyright">
-                Copyright &copy; 2016 MIT Joint Program on the Science and Policy of Global Change.
+                <a href="https://globalchange.mit.edu/" style="color:#AAAAAA">Copyright &copy; 2017 MIT Joint Program on the Science and Policy of Global Change.</a>
             </div>
         </div>
         <div id="intro_templates" style="display: none;">
